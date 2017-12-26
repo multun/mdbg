@@ -1,6 +1,6 @@
-#include "test.h"
+#include "mdbg.h"
 
-int main(void)
+int main(int argc, char *argv[])
 {
-  return c();
+  return trace(argc, argv);
 }

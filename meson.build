@@ -2,6 +2,8 @@ project('mdbg', 'c',
         version: '0.1',
         license: 'MIT')
 
+add_global_arguments(['-O0', '-g3'], language: 'c')
+
 inc = include_directories('include')
 subdir('src')
 capstone_dep = dependency('capstone')
