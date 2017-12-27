@@ -6,12 +6,12 @@
 typedef enum proc_ev
 {
     PROC_INIT,      // the process startup is pending
-    PROC_EXITED,    // the process is dead
-    PROC_SIGNALED,  // killed by signal
     PROC_STOPPED,   // stopped by signal, proc.signal contains the signal id
     PROC_TRAPPED,   // received a trap
     PROC_SYSCALL,   // inside a syscall
     PROC_CONTINUED, // continued
+    PROC_EXITED,    // the process is dead
+    PROC_SIGNALED,  // killed by signal
 } e_proc_ev;
 
 
@@ -41,9 +41,9 @@ typedef struct proc
 
 /**
 ** \brief is the process still alive?
-** \param proc the process to test
+** \param Proc the process to test
 */
-bool proc_alive(s_proc *proc);
+#define PROC_ALIVE(Proc) ((Proc)->ev < PROC_EXITED)
 
 
 /**

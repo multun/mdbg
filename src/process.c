@@ -12,19 +12,6 @@
 #include <sys/wait.h>
 
 
-bool proc_alive(s_proc *proc)
-{
-    switch (proc->ev)
-    {
-    case PROC_SIGNALED:
-    case PROC_EXITED:
-        return false;
-    default:
-        return true;
-    }
-}
-
-
 static e_proc_ev proc_stopped_status(int signal)
 {
     switch (signal)

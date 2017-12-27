@@ -31,7 +31,7 @@ int tracer(int child_pid)
         proc_update(&child, status);
         proc_describe(&child);
 
-        if (!proc_alive(&child))
+        if (!PROC_ALIVE(&child))
             break;
 
         proc_continue(&child);
