@@ -13,7 +13,6 @@ int tracee(int argc, char *argv[])
     return 1;
   }
   puts("starting the child process");
-  kill(getpid(), SIGSTOP);
   execvp(argv[0], argv);
   warn("child exec failed");
   return 1;

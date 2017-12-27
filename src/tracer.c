@@ -2,50 +2,40 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <sys/ptrace.h>
-#include <sys/user.h>
 #include <sys/wait.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include "proc_trace.h"
 #include "process.h"
+#include "setup.h"
 
 
-int print_syscall(pid_t cpid)
+static void proc_continue(s_proc *proc)
 {
-    struct user_regs_struct regs;
-
-    if (ptrace(PTRACE_GETREGS, cpid, NULL, &regs))
-        err(1, "GETREGS failed");
-
-    printf("syscall(%lld)\n", regs.orig_rax);
-    return 0;
+    if (proc_cont(proc, PTRACE_SYSCALL))
+        err(1, "ptrace(PTRACE_SYSCALL) failed");
 }
 
 
 int tracer(int child_pid)
 {
     s_proc child = PROC(child_pid);
-    ptrace(PTRACE_SETOPTIONS, child, 0, PTRACE_O_TRACESYSGOOD);
     while (true)
     {
         int status;
-        int signal_pid = waitpid(-1, &status, 0);
+        int signal_pid = waitpid(child_pid, &status, __WALL);
         if (signal_pid < 0)
             err(1, "waitpid failed");
 
-        if (signal_pid != child_pid)
-        {
-            warnx("untraced pid %d was signaled", child_pid);
-            continue;
-        }
-
         proc_update(&child, status);
+        proc_describe(&child);
+
         if (!proc_alive(&child))
             break;
-        proc_describe(&child);
-        int sig = child.ev == PROC_STOPPED ? child.ev_data : 0;
-        if (ptrace(PTRACE_SYSCALL, child, NULL, sig) < 0)
-            err(1, "ptrace(PTRACE_SYSCALL) failed");
+
+        proc_continue(&child);
     }
+    puts("i'm done here");
     return 0;
 }

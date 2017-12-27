@@ -17,20 +17,25 @@ typedef enum proc_ev
 
 typedef struct proc
 {
+    bool setup_done;
     int pid;
     e_proc_ev ev;
-    int ev_data;
+    int exit_status;
+    int signal;
+    bool deliver_signal;
     bool coredump;
 } s_proc;
 
 
-#define PROC(Pid)          \
-    (s_proc)               \
-    {                      \
-        .pid = (Pid),      \
-        .ev_data = -1,     \
-        .coredump = false, \
-        .ev = PROC_INIT,   \
+#define PROC(Pid)            \
+    (s_proc)                 \
+    {                        \
+        .setup_done = false, \
+        .pid = (Pid),        \
+        .exit_status = -1,   \
+        .signal = 0,         \
+        .coredump = false,   \
+        .ev = PROC_INIT,     \
     }
 
 
@@ -45,8 +50,9 @@ bool proc_alive(s_proc *proc);
 ** \brief updates the internal process state metadata
 ** \param proc the process to update
 ** \param status the status as returned by waitpid
+** \return whether the operation failed
 */
-void proc_update(s_proc *proc, int status);
+bool proc_update(s_proc *proc, int status);
 
 
 /**
