@@ -1,3 +1,4 @@
+#include <elf.h>
 #include <err.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -6,6 +7,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include "auxv.h"
 #include "proc_trace.h"
 #include "process.h"
 #include "setup.h"
@@ -20,6 +22,7 @@ static void proc_continue(s_proc *proc)
 
 int tracer(int child_pid)
 {
+    printf("debugging PID %d\n", child_pid);
     s_proc child = PROC(child_pid);
     while (true)
     {
@@ -28,6 +31,11 @@ int tracer(int child_pid)
         if (signal_pid < 0)
             err(1, "waitpid failed");
 
+        unsigned long ep;
+        if (proc_auxv_get(&child, AT_ENTRY, &ep))
+            warnx("auxv_get failed");
+        else
+            printf("ep: %lx\n", ep);
         proc_update(&child, status);
         proc_describe(&child);
 
