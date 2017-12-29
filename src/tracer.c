@@ -9,9 +9,12 @@
 
 #include "auxv.h"
 #include "breakpoint.h"
+#include "commands.h"
 #include "proc_trace.h"
 #include "process.h"
 #include "setup.h"
+
+#include <readline/readline.h>
 
 
 static void proc_continue(s_proc *proc)
@@ -39,6 +42,8 @@ int tracer(int child_pid)
             printf("ep: %lx\n", ep);
         proc_update(&child, status);
         proc_describe(&child);
+        if (child.ev == PROC_TRAPPED)
+            printf("[%d]\n", cmd_parserun(&child, readline(">")));
 
         if (!PROC_ALIVE(&child))
             break;
