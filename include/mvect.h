@@ -16,6 +16,15 @@ typedef struct mvect
 } s_mvect;
 
 
+#define MVECT_DEFAULT                       \
+    (s_mvect)                               \
+    {                                       \
+        .size = 0,                          \
+        .capacity = 0,                      \
+        .data = NULL,                       \
+    }
+
+
 /**
 ** \param Vect the vector to fetch the data from
 ** \param Type the resulting type
