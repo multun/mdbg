@@ -100,3 +100,16 @@ void *mvect_pop(s_mvect *vect, size_t size);
 ** \return the number of elements inside the vector
 */
 #define MVECT_SIZE(Vect, Type) (((Vect)->size) / sizeof(Type))
+
+
+/**
+** \brief iterate over the elements of a vector
+** \param Vect the vector to iterate over
+** \param Type the type of the vector elements
+** \param IName the name of the iterator variable
+** \return the number of elements inside the vector
+*/
+#define MVECT_FOREACH(Vect, Type, IName)                                \
+    for (Type *IName = MVECT_DATA(Vect, Type);                          \
+         IName < MVECT_DATA(Vect, Type) + MVECT_SIZE(Vect, Type);       \
+         IName++)
