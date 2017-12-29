@@ -20,7 +20,10 @@ void mvect_push(s_mvect *vect, size_t size, const void *data)
     bool cap_changed = false;
     while (vect->size + size > vect->capacity)
     {
-        vect->capacity *= 2;
+        if (vect->capacity)
+            vect->capacity *= 2;
+        else
+            vect->capacity += 8;
         cap_changed = true;
     }
 
