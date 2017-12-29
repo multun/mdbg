@@ -20,7 +20,9 @@ typedef struct cmd
     // the documentation string of the command
     // it will be displayed by the help command
     const char *doc;
-} s_cmd;
+
+    // apparently LD aligns data on a 16b basis when merging sections
+} __attribute__((aligned(16))) s_cmd;
 
 
 #define CMD_SEC cmds
