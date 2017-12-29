@@ -8,12 +8,8 @@
 int tracee(int argc, char *argv[])
 {
   if (ptrace(PTRACE_TRACEME) < 0)
-  {
-    warn("child TRACEME failed");
-    return 1;
-  }
-  puts("starting the child process");
+      err(1, "child TRACEME failed");
+
   execvp(argv[0], argv);
-  warn("child exec failed");
-  return 1;
+  err(1, "child exec failed");
 }
