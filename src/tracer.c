@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "auxv.h"
+#include "breakpoint.h"
 #include "proc_trace.h"
 #include "process.h"
 #include "setup.h"
@@ -42,6 +43,7 @@ int tracer(int child_pid)
         if (!PROC_ALIVE(&child))
             break;
 
+        proc_add_breakpoint(&child, (void*)ep);
         proc_continue(&child);
     }
     puts("i'm done here");
