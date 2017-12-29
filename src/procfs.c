@@ -4,6 +4,10 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/sendfile.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 
 int proc_open_procfs(s_proc *proc, const char *fname, int flags)
@@ -20,4 +24,29 @@ int proc_open_procfs(s_proc *proc, const char *fname, int flags)
     if (fd < 0)
         warn("couldn't open %s", path);
     return fd;
+}
+
+
+bool proc_cat_procfs(s_proc *proc, const char *fname)
+{
+    int fd = proc_open_procfs(proc, fname, O_RDONLY);
+    if (fd < 0)
+        return true;
+
+    const size_t step = 1UL << 16;
+
+
+    // lets assume sendfile returning a short count means
+    // something wrong happened, as procfs is "special"
+    ssize_t written;
+    while ((written = sendfile(STDERR_FILENO, fd, NULL, step)) == step)
+        continue;
+
+    close(fd);
+
+    if (written >= 0)
+        return false;
+
+    warn("sendfile failed");
+    return true;
 }
