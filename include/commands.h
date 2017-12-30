@@ -90,3 +90,14 @@ int cmd_run(s_proc *proc, int argc, char *argv[]);
 ** \return the command's status code
 */
 int cmd_parserun(s_proc *proc, char *cmdline);
+
+
+// does the command require the process to continue?
+#define CMD_CONT 2
+#define CMD_SUCCESS 0
+#define CMD_FAILURE 1
+#define CMD_EXIT 4
+#define CMD_FATAL (CMD_FAILURE | CMD_EXIT)
+#define CMD_NOT_FOUND 8
+
+#define CMD_SUCCEEDED(Code) ((Code) & 1)

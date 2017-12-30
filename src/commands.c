@@ -17,11 +17,11 @@ static const s_cmd *cmd_get(const char *name)
 int cmd_run(s_proc *proc, int argc, char *argv[])
 {
     if (!argv[0])
-        return 0;
+        return CMD_SUCCESS;
 
     const s_cmd *cmd = cmd_get(argv[0]);
     if (!cmd)
-        return 127;
+        return CMD_NOT_FOUND | CMD_FAILURE;
 
     return cmd->func(proc, argc, argv);
 }
@@ -29,6 +29,9 @@ int cmd_run(s_proc *proc, int argc, char *argv[])
 
 int cmd_parserun(s_proc *proc, char *cmdline)
 {
+    if (!cmdline)
+        return CMD_EXIT | CMD_NOT_FOUND;
+
     s_mvect vec;
     MVECT_INIT(&vec, char*, 5);
     const char delim[] = " \t";
@@ -51,5 +54,6 @@ int CMD(help, "displays this help",
     CMD_FOREACH(cur)
         if (cur->doc)
             fprintf(stderr, "%s\t%s\n", cur->name, cur->doc);
-    return 0;
+
+    return CMD_SUCCESS;
 }
