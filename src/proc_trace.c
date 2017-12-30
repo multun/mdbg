@@ -38,10 +38,17 @@ bool proc_sigtrace(s_proc *proc, enum __ptrace_request request, int sig)
 }
 
 
-bool proc_cont(s_proc *proc, enum __ptrace_request request)
+bool proc_cont(s_proc *proc)
 {
     int sig = proc->deliver_signal ? proc->signal : 0;
-    return proc_sigtrace(proc, PTRACE_SYSCALL, sig);
+
+    enum __ptrace_request request = PTRACE_CONT;
+
+    bool has_syscall_watches = proc->watched_syscalls.size;
+    if (has_syscall_watches)
+        request = PTRACE_SYSCALL;
+
+    return proc_sigtrace(proc, request, sig);
 }
 
 

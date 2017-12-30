@@ -19,8 +19,8 @@
 
 static void proc_continue(s_proc *proc)
 {
-    if (proc_cont(proc, PTRACE_SYSCALL))
-        err(1, "ptrace(PTRACE_SYSCALL) failed");
+    if (proc_cont(proc))
+        errx(1, "continuing failed");
 }
 
 
