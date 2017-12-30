@@ -6,6 +6,7 @@
 #include <sys/ptrace.h>
 #include <unistd.h>
 
+#include "autocomplete.h"
 #include "auxv.h"
 #include "breakpoint.h"
 #include "commands.h"
@@ -39,6 +40,7 @@ static int interract(s_proc *proc)
 
 int tracer(int child_pid)
 {
+    autocomplete_setup();
     printf("debugging PID %d\n", child_pid);
     s_proc child = PROC(child_pid);
 
