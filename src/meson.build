@@ -1,7 +1,7 @@
 mdbglib_sources = ['mdbg.c', 'tracer.c', 'tracee.c',
     'process.c', 'setup.c', 'proc_trace.c', 'alloc.c',
     'mlist.c', 'mvect.c', 'procfs.c', 'auxv.c', 'breakpoint.c',
-    'commands.c', 'info_memory.c', 'proc_wait.c']
+    'commands.c', 'info_memory.c', 'proc_wait.c', 'continue.c']
 
 
 cc = meson.get_compiler('c')
