@@ -1,5 +1,7 @@
 #pragma once
 
+#include "mvect.h"
+
 #include <stdbool.h>
 
 
@@ -24,18 +26,20 @@ typedef struct proc
     int signal;
     bool deliver_signal;
     bool coredump;
+    s_mvect watched_syscalls;
 } s_proc;
 
 
-#define PROC(Pid)            \
-    (s_proc)                 \
-    {                        \
-        .setup_done = false, \
-        .pid = (Pid),        \
-        .exit_status = -1,   \
-        .signal = 0,         \
-        .coredump = false,   \
-        .ev = PROC_INIT,     \
+#define PROC(Pid)                           \
+    (s_proc)                                \
+    {                                       \
+        .setup_done = false,                \
+        .pid = (Pid),                       \
+        .exit_status = -1,                  \
+        .signal = 0,                        \
+        .coredump = false,                  \
+        .ev = PROC_INIT,                    \
+        .watched_syscalls = MVECT_DEFAULT,  \
     }
 
 
