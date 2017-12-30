@@ -113,3 +113,17 @@ void proc_describe(s_proc *proc)
         break;
     }
 }
+
+
+bool proc_is_userstop(s_proc *proc)
+{
+    if (proc->ev != PROC_SYSCALL)
+        return true;
+
+    int current_syscall = proc_anal_syscall(proc);
+    MVECT_FOREACH(&proc->watched_syscalls, int, cur)
+        if (*cur == current_syscall)
+            return true;
+
+    return false;
+}

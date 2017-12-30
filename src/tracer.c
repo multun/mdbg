@@ -2,9 +2,8 @@
 #include <err.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/ptrace.h>
-#include <sys/wait.h>
-#include <sys/wait.h>
 #include <unistd.h>
 
 #include "auxv.h"
@@ -12,9 +11,9 @@
 #include "commands.h"
 #include "proc_trace.h"
 #include "process.h"
-#include "setup.h"
 
 #include <readline/readline.h>
+#include <readline/history.h>
 
 
 static void proc_continue(s_proc *proc)
@@ -24,33 +23,49 @@ static void proc_continue(s_proc *proc)
 }
 
 
+static int interract(s_proc *proc)
+{
+    int status = 0;
+    do {
+        char *line = readline("> ");
+        status = cmd_parserun(proc, line);
+        if (!(status & CMD_NOT_FOUND))
+            add_history(line);
+        free(line);
+    } while (!(status & (CMD_CONT | CMD_EXIT)));
+    return status;
+}
+
+
 int tracer(int child_pid)
 {
     printf("debugging PID %d\n", child_pid);
     s_proc child = PROC(child_pid);
-    while (true)
-    {
-        int status;
-        int signal_pid = waitpid(child_pid, &status, __WALL);
-        if (signal_pid < 0)
-            err(1, "waitpid failed");
 
-        unsigned long ep;
-        if (proc_auxv_get(&child, AT_ENTRY, &ep))
-            warnx("auxv_get failed");
-        else
-            printf("ep: %lx\n", ep);
-        proc_update(&child, status);
-        proc_describe(&child);
-        if (child.ev == PROC_TRAPPED)
-            printf("[%d]\n", cmd_parserun(&child, readline(">")));
+    int cmd_status = 0;
 
-        if (!PROC_ALIVE(&child))
-            break;
+    goto tracer_init;
 
-        proc_add_breakpoint(&child, (void*)ep);
+    do {
+        /* unsigned long ep; */
+        /* if (proc_auxv_get(&child, AT_ENTRY, &ep)) */
+        /*     warnx("auxv_get failed"); */
+        /* else */
+        /*     printf("ep: %lx\n", ep); */
+        /* proc_add_breakpoint(&child, (void*)ep); */
+
+        // TODO: error handling
         proc_continue(&child);
-    }
+    tracer_init:
+        proc_wait(&child);
+
+        if (!proc_is_userstop(&child))
+            continue;
+
+        proc_describe(&child);
+        cmd_status = interract(&child);
+    } while (PROC_ALIVE(&child) && !(cmd_status & CMD_EXIT));
+
     puts("i'm done here");
-    return 0;
+    return CMD_SUCCEEDED(cmd_status);
 }

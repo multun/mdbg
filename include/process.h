@@ -73,3 +73,10 @@ void proc_describe(s_proc *proc);
 ** \return whether the operation failed
 */
 bool proc_wait(s_proc *proc);
+
+
+/**
+** \param proc the process to examine
+** \return whether the current process state requires user attention
+*/
+bool proc_is_userstop(s_proc *proc);
