@@ -60,3 +60,12 @@ bool proc_update(s_proc *proc, int status);
 ** \param proc the process to describe
 */
 void proc_describe(s_proc *proc);
+
+
+/**
+** \brief wait for a process to change state
+** \desc doing so also updates the internal s_proc metadata
+** \param proc the process to wait for
+** \return whether the operation failed
+*/
+bool proc_wait(s_proc *proc);
