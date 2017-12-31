@@ -92,6 +92,13 @@ int cmd_run(s_proc *proc, int argc, char *argv[]);
 int cmd_parserun(s_proc *proc, char *cmdline);
 
 
+/**
+** \brief print a description of a command status code onto stderr
+** \param stauts the status code to format
+*/
+void pcmd(int status);
+
+
 // does the command require the process to continue?
 #define CMD_CONT 2
 #define CMD_SUCCESS 0

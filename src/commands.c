@@ -1,4 +1,5 @@
 #include "commands.h"
+#include "macro_utils.h"
 #include "mvect.h"
 
 #include <string.h>
@@ -56,4 +57,36 @@ int CMD(help, "displays this help",
             fprintf(stderr, "%s\t%s\n", cur->name, cur->doc);
 
     return CMD_SUCCESS;
+}
+
+
+void pcmd(int status)
+{
+    // there isn't anything to say about succeeding commands
+    if (!status)
+        return;
+
+    fprintf(stderr, "[");
+    bool printed = false;
+
+    struct
+    {
+        const char *name;
+        int flag;
+    } flags[] =
+    {
+        { "FAIL", CMD_FAILURE },
+        { "CONT", CMD_CONT },
+        { "EXIT", CMD_EXIT },
+        { "NOT_FOUND", CMD_NOT_FOUND },
+    };
+
+    for (size_t i = 0; i < ARR_SIZE(flags); i++)
+        if (status & flags[i].flag)
+        {
+            fprintf(stderr, "%s%s", printed ? "|" : "", flags[i].name);
+            printed = true;
+        }
+
+    fprintf(stderr, "]\n");
 }

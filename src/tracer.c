@@ -29,7 +29,7 @@ static int interract(s_proc *proc)
     int status = 0;
     do {
         char *line = readline("> ");
-        status = cmd_parserun(proc, line);
+        pcmd((status = cmd_parserun(proc, line)));
         if (!(status & CMD_NOT_FOUND))
             add_history(line);
         free(line);
