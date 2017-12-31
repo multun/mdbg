@@ -3,7 +3,7 @@ mdbglib_sources = ['mdbg.c', 'tracer.c', 'tracee.c',
     'mlist.c', 'mvect.c', 'procfs.c', 'auxv.c', 'breakpoint.c',
     'commands.c', 'info_memory.c', 'proc_wait.c', 'continue.c',
     'breaks.c', 'autocomplete.c', 'info_sig.c', 'info_regs.c',
-    'proc_regs.c']
+    'proc_regs.c', 'setreg.c']
 
 
 cc = meson.get_compiler('c')
