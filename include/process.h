@@ -9,7 +9,9 @@ typedef enum proc_ev
 {
     PROC_INIT,      // the process startup is pending
     PROC_STOPPED,   // stopped by signal, proc.signal contains the signal id
-    PROC_TRAPPED,   // received a trap
+    PROC_BREAKPOINT,// hit a software breakpoint
+    PROC_TRAPPED,   // received a trap from the kernel
+    PROC_SINGLESTEP,// single-stepping
     PROC_SYSCALL,   // inside a syscall
     PROC_CONTINUED, // continued
     PROC_EXITED,    // the process is dead

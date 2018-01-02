@@ -12,21 +12,55 @@
 #include <sys/wait.h>
 
 
-static e_proc_ev proc_stopped_status(int signal)
+static bool proc_stopped_status(s_proc *proc, e_proc_ev *res, int signal)
 {
     switch (signal)
     {
-    case SIGTRAP:
-        return PROC_TRAPPED;
     case SIGTRAP | 0x80:
-        return PROC_SYSCALL;
+        *res = PROC_SYSCALL;
+        break;
+
+    case SIGTRAP:
+        {
+            siginfo_t si;
+            if (proc_trace(proc, PTRACE_GETSIGINFO, NULL, &si))
+                return true;
+            printf("%d\n", si.si_code);
+            switch (si.si_code)
+            {
+            // see TRAP_TRACE in siginfo.h
+            case 2:
+                *res = PROC_SINGLESTEP;
+                break;
+
+            // signal sent by the kernel, see man 2 ptrace
+            case 0x80:
+                *res = PROC_BREAKPOINT;
+                break;
+
+            default:
+                if (proc->setup_done)
+                    // this is a signal sent by the user
+                    *res = PROC_STOPPED;
+                else
+                    // the kernel initialy stops the process
+                    // in a kind of stange way, that appears to come
+                    // from userland
+                    *res = PROC_SINGLESTEP;
+                break;
+            }
+            break;
+        }
+
     default:
-        return PROC_STOPPED;
+        *res = PROC_STOPPED;
+        break;
     }
+    return false;
 }
 
 
-static void proc_update_status(s_proc *proc, int status)
+static bool proc_update_status(s_proc *proc, int status)
 {
     proc->exit_status = 0;
     proc->deliver_signal = false;
@@ -45,8 +79,9 @@ static void proc_update_status(s_proc *proc, int status)
     }
     else if (WIFSTOPPED(status))
     {
-        proc->signal = WSTOPSIG(status);
-        proc->ev = proc_stopped_status(proc->signal);
+        if (proc_stopped_status(proc, &proc->ev, WSTOPSIG(status)))
+            return true;
+        proc->signal = proc->ev == PROC_STOPPED ? WSTOPSIG(status) : 0;
     }
     else if (WIFCONTINUED(status))
         proc->ev = PROC_CONTINUED;
@@ -54,6 +89,7 @@ static void proc_update_status(s_proc *proc, int status)
         abort();
 
     proc->deliver_signal = (proc->ev == PROC_STOPPED);
+    return false;
 }
 
 
@@ -70,8 +106,8 @@ static bool proc_ensure_setup(s_proc *proc)
 
 bool proc_update(s_proc *proc, int status)
 {
-    proc_update_status(proc, status);
-    return proc_ensure_setup(proc);
+    return (proc_update_status(proc, status)
+            || proc_ensure_setup(proc));
 }
 
 
@@ -110,6 +146,12 @@ void proc_describe(s_proc *proc)
         break;
     case PROC_CONTINUED:
         warnx("continued");
+        break;
+    case PROC_BREAKPOINT:
+        warnx("hit a breakpoint");
+        break;
+    case PROC_SINGLESTEP:
+        warnx("singlestep");
         break;
     }
 }
