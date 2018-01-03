@@ -34,3 +34,16 @@ void mlist_remove(s_mlist *list, s_mlist_e *elem)
         elem->next->prev = elem->prev;
     *elem->prev = elem->next;
 }
+
+
+void *mlist_find(s_mlist *list, f_mlist_pred pred, size_t off, void *data)
+{
+    for (s_mlist_e *cur = list->head; cur; cur = cur->next)
+    {
+        void *cont = ((char*)cur) - off;
+        if (pred(cont, data))
+            return cont;
+    }
+
+    return NULL;
+}

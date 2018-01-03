@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdbool.h>
 
 
 /**
@@ -186,3 +187,41 @@ void mlist_insert(s_mlist *list, s_mlist_e *elem, s_mlist_e **ip);
     for (LType(MLIST_TYPE) *IName = MLIST_HEAD(LType, List);    \
          IName;                                                 \
          IName = MLIST_NEXT(LType, IName))
+
+
+/**
+** \brief a predicate type used for list search
+** \param elem the element of the list
+** \param data user-provided data
+** \return whether the predicate matches the element
+*/
+typedef bool (*f_mlist_pred)(void *elem, void *data);
+
+
+/**
+** \brief finds an element inside a list
+** \param list the list to search into
+** \param pred the predicate the returned element must match
+** \param off the offset of the list element field inside its mother structure
+** \param data user-provided data, passed to pred
+** \return the first predicate-matching element
+*/
+void *mlist_find(s_mlist *list, f_mlist_pred pred, size_t off, void *data);
+
+
+/**
+** \param LType the metadata tuple
+** \return the offset of the list element inside the mother structure
+*/
+#define MLIST_FIELD_OFF(LType) offsetof(LType(MLIST_TYPE), LType(MLIST_FIELD))
+
+
+/**
+** \param LType the metadata tuple
+** \param List the list to search into
+** \param Pred the predicate to apply to list elements
+** \param Data user-provided data, passed to the predicate
+** \return the first predicate-matching element
+*/
+#define MLIST_FIND(LType, List, Pred, Data)                             \
+    ((LType(MLIST_TYPE)*)mlist_find(List, Pred, MLIST_FIELD_OFF(LType), Data))
