@@ -17,7 +17,7 @@ static bool handle_ptrace_error(s_proc *proc, bool force)
 bool proc_trace(s_proc *proc, enum __ptrace_request request,
                 void *addr, void *data)
 {
-    int res = ptrace(request, proc->pid, addr, data);
+    long res = ptrace(request, proc->pid, addr, data);
     if (res < 0)
         return handle_ptrace_error(proc, false);
     return false;
@@ -52,7 +52,7 @@ bool proc_cont(s_proc *proc)
 }
 
 
-bool proc_peek(s_proc *proc, void *addr, int *res)
+bool proc_peek(s_proc *proc, void *addr, long *res)
 {
     errno = 0;
     *res = ptrace(PTRACE_PEEKTEXT, proc->pid, addr, NULL);
@@ -64,14 +64,7 @@ bool proc_peek(s_proc *proc, void *addr, int *res)
 }
 
 
-bool proc_poke(s_proc *proc, void *addr, int data)
+bool proc_poke(s_proc *proc, void *addr, long data)
 {
-    union
-    {
-        void *vdata;
-        int idata;
-    } orig_data;
-    orig_data.idata = data;
-
-    return proc_trace(proc, PTRACE_POKETEXT, addr, orig_data.vdata);
+    return proc_trace(proc, PTRACE_POKETEXT, addr, (void*)data);
 }
