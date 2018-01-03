@@ -41,7 +41,7 @@ typedef struct proc
         .signal = 0,                        \
         .coredump = false,                  \
         .ev = PROC_INIT,                    \
-        .watched_syscalls = MVECT_DEFAULT,  \
+        .watched_syscalls = MVECT_EMPTY,    \
     }
 
 

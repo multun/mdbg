@@ -16,7 +16,7 @@ typedef struct mvect
 } s_mvect;
 
 
-#define MVECT_DEFAULT                       \
+#define MVECT_EMPTY                         \
     (s_mvect)                               \
     {                                       \
         .size = 0,                          \
