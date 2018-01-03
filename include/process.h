@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mlist.h"
 #include "mvect.h"
 
 #include <stdbool.h>
@@ -29,6 +30,7 @@ typedef struct proc
     bool deliver_signal;
     bool coredump;
     s_mvect watched_syscalls;
+    s_mlist breakpoints;
 } s_proc;
 
 
@@ -42,6 +44,7 @@ typedef struct proc
         .coredump = false,                  \
         .ev = PROC_INIT,                    \
         .watched_syscalls = MVECT_EMPTY,    \
+        .breakpoints = MLIST_EMPTY,         \
     }
 
 

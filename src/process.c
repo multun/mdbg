@@ -1,7 +1,8 @@
-#include "process.h"
-#include "tracee.h"
-#include "setup.h"
+#include "breakpoint.h"
 #include "proc_trace.h"
+#include "process.h"
+#include "setup.h"
+#include "tracee.h"
 
 #include <sys/user.h>
 #include <err.h>
@@ -25,7 +26,7 @@ static bool proc_stopped_status(s_proc *proc, e_proc_ev *res, int signal)
             siginfo_t si;
             if (proc_trace(proc, PTRACE_GETSIGINFO, NULL, &si))
                 return true;
-            printf("%d\n", si.si_code);
+
             switch (si.si_code)
             {
             // see TRAP_TRACE in siginfo.h
@@ -106,8 +107,14 @@ static bool proc_ensure_setup(s_proc *proc)
 
 bool proc_update(s_proc *proc, int status)
 {
-    return (proc_update_status(proc, status)
-            || proc_ensure_setup(proc));
+    if (proc_update_status(proc, status)
+            || proc_ensure_setup(proc))
+        return true;
+
+    if (proc->ev == PROC_BREAKPOINT)
+        return proc_breakpoint_prepare(proc);
+
+    return false;
 }
 
 

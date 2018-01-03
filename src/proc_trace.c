@@ -1,3 +1,4 @@
+#include "breakpoint.h"
 #include "proc_trace.h"
 
 #include <errno.h>
@@ -47,6 +48,9 @@ static int proc_getsig(s_proc *proc)
 
 bool proc_cont(s_proc *proc)
 {
+    while (proc->ev == PROC_BREAKPOINT)
+        if (proc_breakpoint_step(proc))
+            return true;
 
     enum __ptrace_request request = PTRACE_CONT;
 

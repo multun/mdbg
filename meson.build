@@ -6,7 +6,6 @@ add_global_arguments(['-O0', '-g3'], language: 'c')
 
 inc = include_directories('include')
 subdir('src')
-capstone_dep = dependency('capstone')
 
 testexe = executable('mdbg', 'main.c',
                      include_directories: inc,
