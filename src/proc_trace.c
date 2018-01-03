@@ -8,6 +8,7 @@ static bool handle_ptrace_error(s_proc *proc, bool force)
 {
     if (errno != ESRCH && !force)
         return true;
+
     proc->ev = PROC_EXITED;
     proc->exit_status = 1;
     return false;
@@ -38,9 +39,14 @@ bool proc_sigtrace(s_proc *proc, enum __ptrace_request request, int sig)
 }
 
 
+static int proc_getsig(s_proc *proc)
+{
+    return proc->deliver_signal ? proc->signal : 0;
+}
+
+
 bool proc_cont(s_proc *proc)
 {
-    int sig = proc->deliver_signal ? proc->signal : 0;
 
     enum __ptrace_request request = PTRACE_CONT;
 
@@ -48,7 +54,13 @@ bool proc_cont(s_proc *proc)
     if (has_syscall_watches)
         request = PTRACE_SYSCALL;
 
-    return proc_sigtrace(proc, request, sig);
+    return proc_sigtrace(proc, request, proc_getsig(proc));
+}
+
+
+bool proc_singlestep(s_proc *proc)
+{
+    return proc_sigtrace(proc, PTRACE_SINGLESTEP, proc_getsig(proc));
 }
 
 
