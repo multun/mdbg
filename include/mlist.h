@@ -60,6 +60,9 @@ typedef struct mlist
 } s_mlist;
 
 
+#define MLIST_EMPTY (s_mlist){ .size = 0, .head = NULL }
+
+
 /**
 ** \brief returns the mother structure of one of its fields
 ** \param Type the type of the structure to get back to
