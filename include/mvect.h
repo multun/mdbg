@@ -113,3 +113,21 @@ void *mvect_pop(s_mvect *vect, size_t size);
     for (Type *IName = MVECT_DATA(Vect, Type);                          \
          IName < MVECT_DATA(Vect, Type) + MVECT_SIZE(Vect, Type);       \
          IName++)
+
+
+/**
+** \brief pops raw data off the back of the vector
+** \param vect the vector to pop data from
+** \param res where to store the poped data
+** \param size the count of bytes to pop
+*/
+void mvect_pop_back(s_mvect *vect, void *res, size_t size);
+
+
+/**
+** \brief pops raw data off the front of the vector
+** \param vect the vector to pop data from
+** \param res where to store the poped data
+** \param size the count of bytes to pop
+*/
+void mvect_pop_front(s_mvect *vect, void *res, size_t size);

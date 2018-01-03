@@ -35,10 +35,8 @@ void mvect_push(s_mvect *vect, size_t size, const void *data)
 }
 
 
-void *mvect_pop(s_mvect *vect, size_t size)
+static void mvect_shrink(s_mvect *vect)
 {
-    // because we return the data we pop, we can't shrink the vector right after
-    // TODO: constant time formula
     bool cap_changed = false;
     while (vect->size < vect->capacity / 2)
     {
@@ -48,8 +46,37 @@ void *mvect_pop(s_mvect *vect, size_t size)
 
     if (cap_changed)
         vect->data = xrealloc(vect->data, vect->capacity);
+}
+
+
+void *mvect_pop(s_mvect *vect, size_t size)
+{
+    // because we return the data we pop, we can't shrink the vector right after
+    // TODO: constant time formula
+    mvect_shrink(vect);
 
     assert(vect->size >= size);
     vect->size -= size;
     return vect->data + vect->size;
+}
+
+
+void mvect_pop_back(s_mvect *vect, void *res, size_t size)
+{
+    assert(vect->size >= size);
+    vect->size -= size;
+    memcpy(res, vect->data + vect->size, size);
+
+    mvect_shrink(vect);
+}
+
+
+void mvect_pop_front(s_mvect *vect, void *res, size_t size)
+{
+    assert(vect->size >= size);
+    vect->size -= size;
+    memcpy(res, vect->data, size);
+    memmove(vect->data, vect->data + size, vect->size);
+
+    mvect_shrink(vect);
 }
