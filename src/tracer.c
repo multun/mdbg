@@ -49,13 +49,6 @@ int tracer(int child_pid)
     goto tracer_init;
 
     do {
-        /* unsigned long ep; */
-        /* if (proc_auxv_get(&child, AT_ENTRY, &ep)) */
-        /*     warnx("auxv_get failed"); */
-        /* else */
-        /*     printf("ep: %lx\n", ep); */
-        /* proc_add_breakpoint(&child, (void*)ep); */
-
         // TODO: error handling
         proc_continue(&child);
     tracer_init:
