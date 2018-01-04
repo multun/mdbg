@@ -42,6 +42,14 @@ void mvect_init(s_mvect *vect, size_t cap);
 
 
 /**
+** \brief expands the vector so that it can hold at least size
+** \param vect the vector to expand the size of
+** \param size the target minimum size
+*/
+void mvect_expand(s_mvect *vect, size_t size);
+
+
+/**
 ** \brief initialize a vector so that it can initialy hold Count
 **    elements of type Type
 ** \param Type the type of the vector elements

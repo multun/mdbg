@@ -14,7 +14,7 @@ void mvect_init(s_mvect *vect, size_t cap)
 }
 
 
-void mvect_push(s_mvect *vect, size_t size, const void *data)
+void mvect_expand(s_mvect *vect, size_t size)
 {
     // TODO: constant time formula
     bool cap_changed = false;
@@ -29,6 +29,12 @@ void mvect_push(s_mvect *vect, size_t size, const void *data)
 
     if (cap_changed)
         vect->data = xrealloc(vect->data, vect->capacity);
+}
+
+
+void mvect_push(s_mvect *vect, size_t size, const void *data)
+{
+    mvect_expand(vect, size);
 
     memcpy(vect->data + vect->size, data, size);
     vect->size += size;
