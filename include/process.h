@@ -3,6 +3,7 @@
 #include "mlist.h"
 #include "mvect.h"
 
+#include <libunwind.h>
 #include <stdbool.h>
 
 
@@ -31,6 +32,7 @@ typedef struct proc
     bool coredump;
     s_mvect watched_syscalls;
     s_mlist breakpoints;
+    unw_addr_space_t unw_as;
 } s_proc;
 
 

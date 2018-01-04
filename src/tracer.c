@@ -8,6 +8,7 @@
 
 #include "autocomplete.h"
 #include "auxv.h"
+#include "backtrace.h"
 #include "breakpoint.h"
 #include "commands.h"
 #include "proc_trace.h"
@@ -43,6 +44,7 @@ int tracer(int child_pid)
     autocomplete_setup();
     printf("debugging PID %d\n", child_pid);
     s_proc child = PROC(child_pid);
+    backtrace_init(&child);
 
     int cmd_status = 0;
 
