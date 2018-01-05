@@ -1,7 +1,7 @@
 #include "commands.h"
+#include "expr.h"
 #include "proc_regs.h"
 #include "proc_trace.h"
-#include "cmdutils.h"
 
 #include <stdio.h>
 
@@ -15,10 +15,10 @@ int CMD(setreg, "sets the value of a register",
         return CMD_FAILURE;
     }
 
-    size_t reg;
+    t_ureg reg;
     e_uregs regid = proc_findreg(argv[1]);
     return ((regid == UREG_COUNT
-             || parse_size_t(argv[2], &reg)
+             || proc_expr_eval(proc, argv[2], &reg)
              || proc_setreg(proc, regid, reg))
             * CMD_FAILURE);
 }

@@ -80,8 +80,8 @@ int CMD(disass, "disassembles the next instruction",
         return CMD_FAILURE;
     }
 
-    size_t icount = 1;
-    if (argc > 1 && parse_size_t(argv[1], &icount))
+    t_ureg icount = 1;
+    if (argc > 1 && parse_ureg(argv[1], &icount))
         return CMD_FAILURE;
 
     t_ureg rip;
