@@ -1,15 +1,14 @@
 #include "auxv.h"
 #include "breakpoint.h"
-#include "cmdutils.h"
 #include "commands.h"
 #include "err.h"
+#include "expr.h"
 
 #include <elf.h>
 #include <stdlib.h>
 
 
-int CMD(break, "adds a breakpoint at a specified address",
-        s_proc *proc, int argc, char *argv[])
+static int break_sub(s_proc *proc, int argc, char *argv[], bool persistant)
 {
     if (argc != 2)
     {
@@ -17,8 +16,24 @@ int CMD(break, "adds a breakpoint at a specified address",
         return CMD_FAILURE;
     }
 
-    size_t addr;
-    return ((parse_size_t(argv[1], &addr)
-             || proc_add_breakpoint(proc, (void*)addr, true))
+    t_ureg addr;
+    return ((proc_expr_eval(proc, argv[1], &addr)
+             || proc_add_breakpoint(proc, (void*)addr, persistant))
             * CMD_FAILURE);
+}
+
+
+int CMD(break, "adds a breakpoint at a specified expression",
+        s_proc *proc, int argc, char *argv[])
+{
+    return break_sub(proc, argc, argv, true);
+}
+
+
+
+
+int CMD(tbreak, "adds a temporary breakpoint at a specified expression",
+        s_proc *proc, int argc, char *argv[])
+{
+    return break_sub(proc, argc, argv, false);
 }
