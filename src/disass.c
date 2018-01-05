@@ -70,24 +70,11 @@ static void format_insn(cs_insn *insn)
 }
 
 
-int CMD(disass, "disassembles the next instruction",
-        s_proc *proc, int argc, char *argv[])
+bool print_disass(s_proc *proc, t_ureg addr, char *scount)
 {
-    if (argc > 2)
-    {
-        fprintf(stderr, "too many arguments. Usage: %s [instruction count]\n",
-                *argv);
-        return CMD_FAILURE;
-    }
-
     t_ureg icount = 1;
-    if (argc > 1 && parse_ureg(argv[1], &icount))
-        return CMD_FAILURE;
-
-    t_ureg rip;
-    if (proc_getreg(proc, UREG_RIP, &rip))
-        return CMD_FAILURE;
-
+    if (scount && parse_ureg(scount, &icount))
+        return true;
 
     proc_breakpoint_disable_all(proc);
 
@@ -98,7 +85,7 @@ int CMD(disass, "disassembles the next instruction",
     for (size_t i = 0; i < icount; i++)
     {
         size_t cur_size;
-        if (!(insn = disass(proc, rip + acc, &cur_size)))
+        if (!(insn = disass(proc, addr + acc, &cur_size)))
             break;
 
         format_insn(insn);
@@ -107,5 +94,5 @@ int CMD(disass, "disassembles the next instruction",
     }
 
     proc_breakpoint_enable_all(proc);
-    return !insn * CMD_FAILURE;
+    return !insn;
 }
