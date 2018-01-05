@@ -1,10 +1,11 @@
 #include "cmdutils.h"
+#include "proc_regs.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 
-bool parse_size_t(const char *str, size_t *res)
+bool parse_ureg(const char *str, t_ureg *res)
 {
     char *endptr = NULL;
     *res = strtoull(str, &endptr, 0);

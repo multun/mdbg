@@ -1,7 +1,9 @@
 #pragma once
 
+#include "proc_regs.h"
+
 #include <stdbool.h>
 #include <stddef.h>
 
 
-bool parse_size_t(const char *str, size_t *res);
+bool parse_ureg(const char *str, t_ureg *res);
