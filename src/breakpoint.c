@@ -23,6 +23,25 @@ bool proc_breakpoint_disable(s_proc *proc, s_breakpoint *bp)
 }
 
 
+bool proc_breakpoint_disable_all(s_proc *proc)
+{
+    MLIST_FOREACH(cur, BPLIST, &proc->breakpoints)
+        if (proc_breakpoint_disable(proc, cur))
+            return true;
+    return false;
+}
+
+
+bool proc_breakpoint_enable_all(s_proc *proc)
+{
+    MLIST_FOREACH(cur, BPLIST, &proc->breakpoints)
+        if (proc_breakpoint_enable(proc, cur))
+            return true;
+    return false;
+}
+
+
+
 bool proc_add_breakpoint(s_proc *proc, void *addr, bool persistant)
 {
     s_breakpoint tmp_bp = BREAKPOINT(0, addr, persistant);

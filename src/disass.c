@@ -1,46 +1,38 @@
-#include "mvect.h"
 #include "auxv.h"
-#include "commands.h"
-#include "err.h"
-#include "proc_trace.h"
-#include "proc_regs.h"
-
 #include "breakpoint.h"
+#include "cmdutils.h"
+#include "commands.h"
+#include "disass.h"
+#include "err.h"
+#include "mvect.h"
+#include "proc_regs.h"
+#include "proc_trace.h"
+
 #include <inttypes.h>
-#include <capstone/capstone.h>
 #include <elf.h>
 #include <stdlib.h>
 
 
-static bool try_disass(void *buf, size_t buf_size, long addr, size_t *isize)
+static cs_insn *try_disass(void *buf, size_t buf_size, long addr, size_t *isize)
 {
     csh handle;
     if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle))
     {
-        printf("ERROR: Failed to initialize engine!\n");
-        return -1;
+        printf("failed to initialize capstone!\n");
+        return NULL;
     }
 
     cs_insn *insn;
     size_t count = cs_disasm(handle, buf, buf_size, addr, 1, &insn);
-    if (count)
-    {
-        printf("0x%"PRIx64":\t%s\t\t%s\n",
-               insn->address,
-               insn->mnemonic,
-               insn->op_str);
-        cs_free(insn, count);
-
-        if (isize)
-            *isize = insn->size;
-    }
+    if (count && isize)
+        *isize = insn->size;
 
     cs_close(&handle);
-    return count;
+    return !count ? NULL : insn;
 }
 
 
-static bool disass(s_proc *proc, long addr, size_t *isize)
+cs_insn *disass(s_proc *proc, long addr, size_t *isize)
 {
     const size_t imax = 6;
 
@@ -48,6 +40,7 @@ static bool disass(s_proc *proc, long addr, size_t *isize)
     mvect_init(&v, 16);
 
     size_t i = 0;
+    cs_insn *res;
     do {
         if (i++ >= imax)
             goto failure;
@@ -56,37 +49,25 @@ static bool disass(s_proc *proc, long addr, size_t *isize)
         if (proc_peek(proc, (void*)addr, &data))
             goto failure;
 
-
-
         MVECT_PUSH(&v, long, data);
-    } while (!try_disass(v.data, v.size, addr, isize));
+    } while (!(res = try_disass(v.data, v.size, addr, isize)));
 
     free(v.data);
-    return false;
+    return res;
 
 failure:
     free(v.data);
-    return true;
+    return NULL;
 }
 
 
-static bool disable_breakpoints(s_proc *proc)
+static void format_insn(cs_insn *insn)
 {
-    MLIST_FOREACH(cur, BPLIST, &proc->breakpoints)
-        if (proc_breakpoint_disable(proc, cur))
-            return true;
-    return false;
+    printf("0x%"PRIx64":\t%s\t\t%s\n",
+           insn->address,
+           insn->mnemonic,
+           insn->op_str);
 }
-
-
-static bool enable_breakpoints(s_proc *proc)
-{
-    MLIST_FOREACH(cur, BPLIST, &proc->breakpoints)
-        if (proc_breakpoint_enable(proc, cur))
-            return true;
-    return false;
-}
-
 
 
 int CMD(disass, "disassembles the next instruction",
@@ -100,34 +81,31 @@ int CMD(disass, "disassembles the next instruction",
     }
 
     size_t icount = 1;
-    if (argc > 1)
-    {
-        char *endptr = NULL;
-        icount = strtoul(argv[1], &endptr, 0);
-        if (endptr && *endptr)
-        {
-            fprintf(stderr, "invalid digit: %c", *endptr);
-            return CMD_FAILURE;
-        }
-    }
+    if (argc > 1 && parse_size_t(argv[1], &icount))
+        return CMD_FAILURE;
 
     t_ureg rip;
     if (proc_getreg(proc, UREG_RIP, &rip))
         return CMD_FAILURE;
 
 
-    disable_breakpoints(proc);
+    proc_breakpoint_disable_all(proc);
+
+    // disassembling 0 instructions is OK
+    cs_insn *insn = (void*)-1;
 
     size_t acc = 0;
-    bool res = false;
     for (size_t i = 0; i < icount; i++)
     {
         size_t cur_size;
-        if ((res = disass(proc, rip + acc, &cur_size)))
+        if (!(insn = disass(proc, rip + acc, &cur_size)))
             break;
+
+        format_insn(insn);
+        cs_free(insn, 1);
         acc += cur_size;
     }
 
-    enable_breakpoints(proc);
-    return res * CMD_FAILURE;
+    proc_breakpoint_enable_all(proc);
+    return !insn * CMD_FAILURE;
 }

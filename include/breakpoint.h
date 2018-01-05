@@ -67,3 +67,17 @@ bool proc_breakpoint_disable(s_proc *proc, s_breakpoint *bp);
 ** \param proc the process to perform the operation in
 */
 bool proc_breakpoint_step(s_proc *proc);
+
+
+/**
+** \brief disable all breakpoints
+** \return whether the operation succeeded
+*/
+bool proc_breakpoint_disable_all(s_proc *proc);
+
+
+/**
+** \brief enable all breakpoints
+** \return whether the operation succeeded
+*/
+bool proc_breakpoint_enable_all(s_proc *proc);
