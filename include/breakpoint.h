@@ -10,7 +10,7 @@
 typedef struct breakpoint
 {
     s_mlist_e bplist;
-    long orig_data;
+    char orig_data;
     void *addr;
     bool persistant;
 } s_breakpoint;
@@ -19,10 +19,9 @@ typedef struct breakpoint
 #define BPLIST(F) F(s_breakpoint, bplist)
 
 
-#define BREAKPOINT(Data, Addr, Persistant)      \
+#define BREAKPOINT(Addr, Persistant)      \
     (s_breakpoint)                              \
     {                                           \
-        .orig_data = (Data),                    \
         .addr = (Addr),                         \
         .persistant = (Persistant),             \
     }

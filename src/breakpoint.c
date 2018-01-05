@@ -9,7 +9,10 @@
 
 bool proc_breakpoint_enable(s_proc *proc, s_breakpoint *bp)
 {
-    long data = bp->orig_data;
+    long data;
+    if (proc_peek(proc, bp->addr, &data))
+        return true;
+
     data &= ~0xFFUL;
     data |= 0xCC;
 
@@ -19,7 +22,14 @@ bool proc_breakpoint_enable(s_proc *proc, s_breakpoint *bp)
 
 bool proc_breakpoint_disable(s_proc *proc, s_breakpoint *bp)
 {
-    return proc_poke(proc, bp->addr, bp->orig_data);
+    long data;
+    if (proc_peek(proc, bp->addr, &data))
+        return true;
+
+    data &= ~0xFFUL;
+    data |= bp->orig_data;
+
+    return proc_poke(proc, bp->addr, data);
 }
 
 
@@ -44,9 +54,15 @@ bool proc_breakpoint_enable_all(s_proc *proc)
 
 bool proc_add_breakpoint(s_proc *proc, void *addr, bool persistant)
 {
-    s_breakpoint tmp_bp = BREAKPOINT(0, addr, persistant);
-    if (proc_peek(proc, addr, &tmp_bp.orig_data)
-        || proc_breakpoint_enable(proc, &tmp_bp))
+    s_breakpoint tmp_bp = BREAKPOINT(addr, persistant);
+
+    long data;
+    if (proc_peek(proc, addr, &data))
+        return true;
+
+    tmp_bp.orig_data = data & 0xFFUL;
+
+    if (proc_breakpoint_enable(proc, &tmp_bp))
         return true;
 
     s_breakpoint *bp = xmalloc(sizeof(*bp));
@@ -107,10 +123,10 @@ bool proc_breakpoint_step(s_proc *proc)
         return true;
 
     if (bp->persistant)
-        return proc_breakpoint_enable(proc, bp);
+        return false;
 
     MLIST_REMOVE(BPLIST, &proc->breakpoints, bp);
-    return false;
+    return proc_breakpoint_disable(proc, bp);
 }
 
 
