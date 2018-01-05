@@ -17,5 +17,5 @@ int CMD(b_ep, "adds a breakpoint at the program's entry point",
     }
 
     printf("ep: %lx\n", ep);
-    return proc_add_breakpoint(proc, (void*)ep, true) * CMD_FAILURE;
+    return proc_add_breakpoint(proc, (void*)ep, false) * CMD_FAILURE;
 }
