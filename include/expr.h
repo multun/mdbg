@@ -8,5 +8,7 @@
 **   or a register name starting %
 ** \param proc the process to evaluate the expression in
 ** \param expr the expression string to evaluate
+** \param res where to store the result
+** \return whether the operation failed
 */
-t_ureg proc_expr_eval(s_proc *proc, const char *expr);
+bool proc_expr_eval(s_proc *proc, const char *expr, t_ureg *res);
