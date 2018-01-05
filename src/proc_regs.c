@@ -1,6 +1,8 @@
 #include "proc_regs.h"
 #include "proc_trace.h"
 
+#include <stdio.h>
+#include <string.h>
 #include <sys/user.h>
 
 
@@ -31,4 +33,15 @@ bool proc_setreg(s_proc *proc, e_uregs regid, t_ureg reg)
 
     UREG(&ur, regid) = reg;
     return proc_trace(proc, PTRACE_SETREGS, NULL, &ur);
+}
+
+
+e_uregs proc_findreg(const char *name)
+{
+    for (size_t i = 0; i < UREG_COUNT; i++)
+        if (!strcmp(name, UREG_NAME(i)))
+            return i;
+
+    fprintf(stderr, "unknown register \"%s\"\n", name);
+    return UREG_COUNT;
 }

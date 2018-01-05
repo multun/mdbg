@@ -7,7 +7,6 @@
 
 
 typedef unsigned long long int t_ureg;
-
 /**
 ** \brief represents metadata about a register
 */
@@ -84,3 +83,12 @@ bool proc_setreg(s_proc *proc, e_uregs regid, t_ureg reg);
 
 #define UREG_NAME(Regid) g_ureg_meta[Regid].name
 #define UREG(Ur, Regid) (*(t_ureg*)((char*)(Ur) + g_ureg_meta[Regid].off))
+
+
+
+/**
+** \brief find a register from its name
+** \param name the name to look for
+** \return UREG_COUNT in case of failure, the register id otherwise
+*/
+e_uregs proc_findreg(const char *name);
