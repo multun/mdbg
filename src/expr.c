@@ -6,7 +6,7 @@
 
 static bool proc_expr_eval_reg(s_proc *proc, const char *expr, t_ureg *res)
 {
-    e_uregs regid = proc_findreg(expr + 1);
+    e_uregs regid = proc_findreg(expr);
     if (regid == UREG_COUNT)
     {
         fprintf(stderr, "no register called \"%s\"", expr);
