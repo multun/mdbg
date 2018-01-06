@@ -47,3 +47,14 @@ void *mlist_find(s_mlist *list, f_mlist_pred pred, size_t off, void *data)
 
     return NULL;
 }
+
+
+void *mlist_nth(s_mlist *list, size_t n, size_t off)
+{
+    size_t i = 0;
+    for (s_mlist_e *cur = list->head; cur; cur = cur->next)
+        if (i++ == n)
+            return ((char*)cur) - off;
+
+    return NULL;
+}

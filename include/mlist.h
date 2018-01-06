@@ -225,3 +225,23 @@ void *mlist_find(s_mlist *list, f_mlist_pred pred, size_t off, void *data);
 */
 #define MLIST_FIND(LType, List, Pred, Data)                             \
     ((LType(MLIST_TYPE)*)mlist_find(List, Pred, MLIST_FIELD_OFF(LType), Data))
+
+
+/**
+** \brief finds an element inside a list
+** \param list the list to search into
+** \param n the index of the element to look for
+** \param off the offset of the list element field inside its mother structure
+** \return the element at the Nth index, or NULL
+*/
+void *mlist_nth(s_mlist *list, size_t n, size_t off);
+
+
+/**
+** \param LType the metadata tuple
+** \param List the list to search into
+** \param N the index of the element to look for
+** \return the element at the NTH position, or NULL
+*/
+#define MLIST_NTH(LType, List, N)                                       \
+    ((LType(MLIST_TYPE)*)mlist_nth(List, N, MLIST_FIELD_OFF(LType)))
