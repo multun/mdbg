@@ -7,7 +7,7 @@ mdbglib_sources = ['tracee.c',
     'disass.c', 'backtrace.c', 'cmdutils.c', 'elfparse.c',
     'proc_bin_map.c', 'func_resolve.c', 'finish.c', 'nexti.c',
     'expr.c', 'examine.c', 'break_list.c', 'break_del.c',
-    'interract.c']
+    'interract.c', 'breakf.c']
 
 
 cc = meson.get_compiler('c')
