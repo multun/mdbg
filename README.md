@@ -13,16 +13,48 @@ I tried to focus on making simple and documented code achieving the purpose
 of the requested exercise: making a debugger.
 
 
+The project is built around a library, libmdbg, which enables easily controlling
+the child program, and interracting with it.
+
+Some basic primitives built over ptrace update metadata about the state of the
+process. These primitives are used by various routines which can either be
+called from user commands or dedicated code.
+
+
 # Usage
 
 Start it as with strace: `mdbg [program] [arguments...]`
 
 All commands taking an address as a parameter can also take `%regname`.
 
+```
+auxv           prints the auxv
+help           displays this help
+info_memory    prints the memory map of the tracee
+continue       let the tracee run until a watched event occurs
+breaks         [syscall number] break on some syscall
+info_sig       prints details about the stopping signal
+info_regs      prints details about the program's registers
+setreg         [register name] [value] sets the value of a register
+stepi          steps to the next instruction
+b_ep           adds a breakpoint at the program's entry point
+break          adds a breakpoint at a specified expression
+tbreak         adds a temporary breakpoint at a specified expression
+backtrace      prints a backtrace
+flookup        [function name] looks up the address of a function inside the main binary
+finish         tbreak when the current function returns
+nexti          puts a temporary breakpoint onto the next instruction
+examine        [s|d|i] [expr] [count?] reads a string, digit or instruction from an address
+break_list     lists breakpoints
+break_del      [id|address] delete a breakpoint
+breakf         [function name] add a breakpoint at the entry point of a function
+```
+
 
 # Requirements
 
  - `meson`
+ - `ninja`
  - `GCC`
  - `libunwind`
  - `capstone`
@@ -63,6 +95,7 @@ ninja install
  - [EASY] resolve symbols located in libraries, by either finding _r_debug
  in ld.so or in DT_DEBUG.
  - [EASY] skip function preludes
+ - [EASY] handle receiving signals while on a breakpoint
  - [EASY] integrate with dish, my 42sh implem (its already modular
       so it should be ok)
  - [TIME] interpret dwarf metadata
