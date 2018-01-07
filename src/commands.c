@@ -15,7 +15,7 @@ static const s_cmd *cmd_get(const char *name)
 }
 
 
-int cmd_run(s_proc *proc, int argc, char *argv[])
+int cmd_run(s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     if (!argv[0])
         return CMD_SUCCESS;
@@ -36,7 +36,7 @@ int cmd_parserun(s_proc *proc, char *cmdline)
     s_mvect vec;
     MVECT_INIT(&vec, char*, 5);
     const char delim[] = " \t";
-    int argc = 0;
+    UNUSED int argc = 0;
     for (char *blk = strtok(cmdline, delim); blk; blk = strtok(NULL, delim))
         if (*blk)
         {
@@ -50,7 +50,7 @@ int cmd_parserun(s_proc *proc, char *cmdline)
 
 
 int CMD(help, "displays this help",
-        s_proc *proc, int argc, char *argv[])
+        UNUSED s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     CMD_FOREACH(cur)
         if (cur->doc)

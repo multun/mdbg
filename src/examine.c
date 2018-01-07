@@ -43,7 +43,7 @@ static int print_string(s_proc *proc, t_ureg addr)
 
 
 int CMD(examine, USAGE " reads a string, digit or instruction from an address",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     if (argc < 3)
     {

@@ -11,7 +11,7 @@
 #define USAGE "[function name]"
 
 int CMD(breakf, USAGE" add a breakpoint at the entry point of a function",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     if (argc != 2)
     {

@@ -9,7 +9,7 @@
 #define USAGE "[register name] [value]"
 
 int CMD(setreg, USAGE " sets the value of a register",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     if (argc < 3)
     {

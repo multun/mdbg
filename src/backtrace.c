@@ -100,7 +100,7 @@ void proc_backtrace(s_proc *proc)
 
 
 int CMD(backtrace, "prints a backtrace",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     proc_backtrace(proc);
     return CMD_SUCCESS;

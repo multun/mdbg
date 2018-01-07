@@ -5,7 +5,7 @@
 
 
 int CMD(nexti, "puts a temporary breakpoint onto the next instruction",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     t_ureg rip;
     if (proc_getreg(proc, UREG_RIP, &rip))

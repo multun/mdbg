@@ -16,7 +16,7 @@ static bool break_has_addr(void *bp, void *addr)
 #define USAGE "[id|address]"
 
 int CMD(break_del, USAGE " delete a breakpoint",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     if (argc != 2)
     {

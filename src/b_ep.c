@@ -7,7 +7,7 @@
 
 
 int CMD(b_ep, "adds a breakpoint at the program's entry point",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     unsigned long ep;
     if (proc_auxv_get(proc, AT_ENTRY, &ep))

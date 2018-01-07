@@ -56,7 +56,7 @@ static bool find_caller(unw_addr_space_t as, pid_t pid, unw_word_t *res)
 
 
 int CMD(finish, "tbreak when the current function returns",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     unw_word_t caller_pc;
     if (find_caller(proc->unw_as, proc->pid, &caller_pc)

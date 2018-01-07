@@ -4,7 +4,7 @@
 
 
 int CMD(stepi, "steps to the next instruction",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     return (proc->ev == PROC_BREAKPOINT
             ? proc_breakpoint_step

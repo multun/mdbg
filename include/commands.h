@@ -53,6 +53,8 @@ extern const s_cmd CMD_SEC_STOP[];
 #define CMD_FNAME(Name) __cmd_func__ ## Name
 
 
+#define UNUSED __attribute__((unused))
+
 /**
 ** \brief declare a new command
 ** \desc use as follows:
@@ -63,14 +65,14 @@ extern const s_cmd CMD_SEC_STOP[];
 ** \param Doc a string describing the usage of the command
 */
 #define CMD(Name, Doc, ...)                                     \
-    static CMD_FNAME(Name) (__VA_ARGS__);                       \
+    CMD_FNAME(Name) (__VA_ARGS__);                       \
     static CMD_ATTR(CMD_SEC) const s_cmd __cmd_ ## Name =       \
     {                                                           \
         .name = #Name,                                          \
         .func = CMD_FNAME(Name),                                \
         .doc = (Doc),                                           \
     };                                                          \
-    static int CMD_FNAME(Name) (__VA_ARGS__)
+    int CMD_FNAME(Name) (__VA_ARGS__)
 
 
 /**

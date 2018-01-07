@@ -6,7 +6,7 @@
 
 
 int CMD(info_regs, "prints details about the program's registers",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     struct user_regs_struct ur;
     if (proc_trace(proc, PTRACE_GETREGS, NULL, &ur))

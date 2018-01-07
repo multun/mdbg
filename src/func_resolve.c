@@ -47,7 +47,7 @@ exit:
 
 int CMD(flookup, USAGE " looks up the address of a function"
         " inside the main binary",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     if (argc < 2)
     {

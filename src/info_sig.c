@@ -1,14 +1,15 @@
+#include <signal.h>
+
 #include "commands.h"
 #include "proc_trace.h"
 #include "macro_utils.h"
 
-#include <signal.h>
 #include <stddef.h>
 #include <stdio.h>
 
 
 int CMD(info_sig, "prints details about the stopping signal",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     siginfo_t si;
     if (proc_trace(proc, PTRACE_GETSIGINFO, NULL, &si))

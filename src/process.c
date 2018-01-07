@@ -1,3 +1,5 @@
+#include <signal.h>
+#include <sys/wait.h>
 #include "breakpoint.h"
 #include "proc_trace.h"
 #include "process.h"
@@ -7,7 +9,6 @@
 #include <sys/user.h>
 #include <err.h>
 #include <errno.h>
-#include <signal.h>
 #include <stdlib.h>
 #include <sys/ptrace.h>
 #include <sys/wait.h>

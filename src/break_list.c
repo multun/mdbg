@@ -4,7 +4,7 @@
 
 
 int CMD(break_list, "lists breakpoints",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     size_t id = 0;
     MLIST_FOREACH(cur, BPLIST, &proc->breakpoints)

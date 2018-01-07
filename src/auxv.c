@@ -36,7 +36,7 @@ bool proc_auxv_get(s_proc *proc, unsigned long key, unsigned long *value)
 
 
 int CMD(auxv, "prints the auxv",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     int fd = proc_open_procfs(proc, "auxv", O_RDONLY);
     if (fd < 0)

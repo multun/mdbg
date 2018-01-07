@@ -7,7 +7,7 @@
 
 
 int CMD(breaks, USAGE " break on some syscall",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     if (argc < 2)
     {

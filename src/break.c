@@ -9,7 +9,7 @@
 
 #define USAGE "[expr]"
 
-static int break_sub(s_proc *proc, int argc, char *argv[], bool persistant)
+static int break_sub(s_proc *proc, UNUSED int argc, UNUSED char *argv[], bool persistant)
 {
     if (argc != 2)
     {
@@ -25,7 +25,7 @@ static int break_sub(s_proc *proc, int argc, char *argv[], bool persistant)
 
 
 int CMD(break, "adds a breakpoint at a specified expression",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     return break_sub(proc, argc, argv, true);
 }
@@ -34,7 +34,7 @@ int CMD(break, "adds a breakpoint at a specified expression",
 
 
 int CMD(tbreak, "adds a temporary breakpoint at a specified expression",
-        s_proc *proc, int argc, char *argv[])
+        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     return break_sub(proc, argc, argv, false);
 }
