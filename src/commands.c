@@ -54,7 +54,7 @@ int CMD(help, "displays this help",
 {
     CMD_FOREACH(cur)
         if (cur->doc)
-            fprintf(stderr, "%s\t%s\n", cur->name, cur->doc);
+            fprintf(stderr, "%-15s\t%s\n", cur->name, cur->doc);
 
     return CMD_SUCCESS;
 }
