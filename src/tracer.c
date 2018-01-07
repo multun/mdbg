@@ -1,26 +1,11 @@
-#include <elf.h>
-#include <err.h>
-#include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <sys/ptrace.h>
-#include <unistd.h>
 
 #include "autocomplete.h"
-#include "auxv.h"
 #include "backtrace.h"
-#include "breakpoint.h"
 #include "commands.h"
 #include "interract.h"
 #include "proc_trace.h"
 #include "process.h"
-
-static void proc_continue(s_proc *proc)
-{
-    if (proc_cont(proc))
-        errx(1, "continuing failed");
-}
-
 
 
 int tracer(int child_pid)
@@ -35,8 +20,7 @@ int tracer(int child_pid)
     goto tracer_init;
 
     do {
-        // TODO: error handling
-        proc_continue(&child);
+        proc_cont(&child);
     tracer_init:
         proc_wait(&child);
 
