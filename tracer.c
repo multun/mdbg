@@ -1,14 +1,17 @@
-#include <stdio.h>
-
 #include "autocomplete.h"
 #include "backtrace.h"
 #include "commands.h"
 #include "interract.h"
 #include "proc_trace.h"
 #include "process.h"
+#include "tracee.h"
+
+#include <err.h>
+#include <stdio.h>
+#include <unistd.h>
 
 
-int tracer(int child_pid)
+static int tracer(int child_pid)
 {
     autocomplete_setup();
     printf("debugging PID %d\n", child_pid);
@@ -33,4 +36,16 @@ int tracer(int child_pid)
 
     puts("i'm done here");
     return CMD_SUCCEEDED(cmd_status);
+}
+
+
+int main(int argc, char *argv[])
+{
+    int cpid = fork();
+    if (cpid == -1)
+        err(1, "fork failed");
+    else if (cpid == 0)
+        return tracee(argc - 1, argv + 1);
+
+    return tracer(cpid);
 }
