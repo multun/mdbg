@@ -11,12 +11,9 @@
 #include "backtrace.h"
 #include "breakpoint.h"
 #include "commands.h"
+#include "interract.h"
 #include "proc_trace.h"
 #include "process.h"
-
-#include <readline/readline.h>
-#include <readline/history.h>
-
 
 static void proc_continue(s_proc *proc)
 {
@@ -24,18 +21,6 @@ static void proc_continue(s_proc *proc)
         errx(1, "continuing failed");
 }
 
-
-static int interract(s_proc *proc)
-{
-    int status = 0;
-    do {
-        char *line = readline("> ");
-        add_history(line);
-        pcmd((status = cmd_parserun(proc, line)));
-        free(line);
-    } while (!(status & (CMD_CONT | CMD_EXIT)));
-    return status;
-}
 
 
 int tracer(int child_pid)
