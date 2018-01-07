@@ -41,6 +41,12 @@ static int tracer(int child_pid)
 
 int main(int argc, char *argv[])
 {
+    if (argc < 2)
+    {
+        fprintf(stderr, "Usage: %s [program] [arguments...]\n", argv[0]);
+        return 1;
+    }
+
     int cpid = fork();
     if (cpid == -1)
         err(1, "fork failed");
