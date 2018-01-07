@@ -26,20 +26,20 @@ Elf64_Addr proc_lookup_symbol(s_proc *proc, const char *symname)
     if (proc_map_bin(proc, &ei))
         return true;
 
-    Elf64_Addr sym = -1;
+    Elf64_Addr sym = SYM_BAD;
     Elf64_Addr base;
     if (proc_get_base(proc, &ei, &base))
         goto exit;
 
     sym = elfimg_symlookup(symname, &ei, base);
-    if (sym == -1)
+    if (sym == SYM_BAD)
     {
         fprintf(stderr, "symbol not found\n");
         goto exit;
     }
 
 exit:
-    return elfimg_unmap(&ei) ? -1 : sym;
+    return elfimg_unmap(&ei) ? SYM_BAD : sym;
 }
 
 
@@ -56,7 +56,7 @@ int CMD(flookup, USAGE " looks up the address of a function"
     }
 
     Elf64_Addr addr = proc_lookup_symbol(proc, argv[1]);
-    if (addr == -1)
+    if (addr == SYM_BAD)
         return CMD_FAILURE;
 
     printf("0x%lx\n", addr);

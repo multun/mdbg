@@ -33,7 +33,7 @@ bool proc_cat_procfs(s_proc *proc, const char *fname)
     if (fd < 0)
         return true;
 
-    const size_t step = 1UL << 16;
+    const ssize_t step = 1UL << 16;
 
 
     // lets assume sendfile returning a short count means

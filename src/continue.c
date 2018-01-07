@@ -3,7 +3,7 @@
 
 
 int CMD(continue, "let the tracee run until a watched event occurs",
-        s_proc *proc, UNUSED int argc, UNUSED char *argv[])
+        UNUSED s_proc *proc, UNUSED int argc, UNUSED char *argv[])
 {
     return CMD_CONT;
 }

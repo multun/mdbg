@@ -47,6 +47,7 @@ typedef struct proc
         .ev = PROC_INIT,                    \
         .watched_syscalls = MVECT_EMPTY,    \
         .breakpoints = MLIST_EMPTY,         \
+        .unw_as = NULL,                     \
     }
 
 

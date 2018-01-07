@@ -4,9 +4,6 @@
 #include "expr.h"
 
 
-typedef bool (*f_mlist_pred)(void *elem, void *data);
-
-
 static bool break_has_addr(void *bp, void *addr)
 {
     return ((s_breakpoint*)bp)->addr == addr;

@@ -4,8 +4,9 @@
 #include <err.h>
 #include <stdio.h>
 
+#include "tracee.h"
 
-int tracee(int argc, char *argv[])
+int tracee(__attribute__((unused)) int argc, char *argv[])
 {
   if (ptrace(PTRACE_TRACEME) < 0)
       err(1, "child TRACEME failed");

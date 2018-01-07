@@ -1,3 +1,4 @@
+#include "autocomplete.h"
 #include "commands.h"
 
 #include <stdlib.h>
@@ -26,7 +27,7 @@ static char *cmd_generator(const char *text, int state)
 }
 
 
-static char **cmd_completion(const char *text, int start, int end)
+static char **cmd_completion(const char *text, UNUSED int start, UNUSED int end)
 {
     rl_attempted_completion_over = 1;
     return rl_completion_matches(text, cmd_generator);

@@ -20,7 +20,7 @@ int CMD(breakf, USAGE" add a breakpoint at the entry point of a function",
     }
 
     Elf64_Addr addr = proc_lookup_symbol(proc, argv[1]);
-    if (addr == -1)
+    if (addr == SYM_BAD)
         return CMD_FAILURE;
 
     return proc_add_breakpoint(proc, (void*)addr, true);

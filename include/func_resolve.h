@@ -4,6 +4,7 @@
 
 #include <elf.h>
 
+#define SYM_BAD (Elf64_Addr)-1
 
 /**
 ** \brief looks up symname into a process image

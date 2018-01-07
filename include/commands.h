@@ -1,5 +1,6 @@
 #pragma once
 
+#include "attr.h"
 #include "process.h"
 
 #include <stdio.h>
@@ -52,8 +53,6 @@ extern const s_cmd CMD_SEC_STOP[];
 
 #define CMD_FNAME(Name) __cmd_func__ ## Name
 
-
-#define UNUSED __attribute__((unused))
 
 /**
 ** \brief declare a new command
