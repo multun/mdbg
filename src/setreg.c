@@ -6,12 +6,14 @@
 #include <stdio.h>
 
 
-int CMD(setreg, "sets the value of a register",
+#define USAGE "[register name] [value]"
+
+int CMD(setreg, USAGE " sets the value of a register",
         s_proc *proc, int argc, char *argv[])
 {
     if (argc < 3)
     {
-        fprintf(stderr, "usage: <regname> <value>\n");
+        CMD_USAGE(USAGE, argv);
         return CMD_FAILURE;
     }
 

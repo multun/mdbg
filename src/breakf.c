@@ -8,13 +8,14 @@
 #include <elf.h>
 #include <stdlib.h>
 
+#define USAGE "[function name]"
 
-int CMD(breakf, "add a breakpoint at the entry point of a function",
+int CMD(breakf, USAGE" add a breakpoint at the entry point of a function",
         s_proc *proc, int argc, char *argv[])
 {
     if (argc != 2)
     {
-        warnx("usage: %s [addr]", *argv);
+        CMD_USAGE(USAGE, argv);
         return CMD_FAILURE;
     }
 

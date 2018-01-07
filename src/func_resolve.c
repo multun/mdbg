@@ -43,12 +43,15 @@ exit:
 }
 
 
-int CMD(flookup, "looks up the address of a function inside the main binary",
+#define USAGE "[function name]"
+
+int CMD(flookup, USAGE " looks up the address of a function"
+        " inside the main binary",
         s_proc *proc, int argc, char *argv[])
 {
     if (argc < 2)
     {
-        fprintf(stderr, "missing function name\n");
+        CMD_USAGE(USAGE, argv);
         return CMD_FAILURE;
     }
 

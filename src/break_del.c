@@ -13,12 +13,14 @@ static bool break_has_addr(void *bp, void *addr)
 }
 
 
-int CMD(break_del, "delete a breakpoint",
+#define USAGE "[id|address]"
+
+int CMD(break_del, USAGE " delete a breakpoint",
         s_proc *proc, int argc, char *argv[])
 {
     if (argc != 2)
     {
-        fprintf(stderr, "Usage: %s (id|[expr])\n", argv[0]);
+        CMD_USAGE(USAGE, argv);
         return CMD_FAILURE;
     }
 

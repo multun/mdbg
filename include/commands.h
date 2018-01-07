@@ -107,4 +107,9 @@ void pcmd(int status);
 #define CMD_FATAL (CMD_FAILURE | CMD_EXIT)
 #define CMD_NOT_FOUND 8
 
+
+#define CMD_USAGE(Usage, Argv)                          \
+    fprintf(stderr, "Usage: %s " USAGE "\n", argv[0])
+
+
 #define CMD_SUCCEEDED(Code) ((Code) & 1)

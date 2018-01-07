@@ -7,12 +7,13 @@
 #include <elf.h>
 #include <stdlib.h>
 
+#define USAGE "[expr]"
 
 static int break_sub(s_proc *proc, int argc, char *argv[], bool persistant)
 {
     if (argc != 2)
     {
-        warnx("usage: %s [addr]", *argv);
+        CMD_USAGE(USAGE, argv);
         return CMD_FAILURE;
     }
 

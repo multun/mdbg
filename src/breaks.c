@@ -3,13 +3,15 @@
 #include <err.h>
 #include <stdlib.h>
 
+#define USAGE "[syscall number]"
 
-int CMD(breaks, "break on some syscall",
+
+int CMD(breaks, USAGE " break on some syscall",
         s_proc *proc, int argc, char *argv[])
 {
     if (argc < 2)
     {
-        warnx("missing syscall number");
+        CMD_USAGE(USAGE, argv);
         return CMD_FAILURE;
     }
 

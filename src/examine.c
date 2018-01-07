@@ -39,12 +39,17 @@ static int print_string(s_proc *proc, t_ureg addr)
     return CMD_SUCCESS;
 }
 
+#define USAGE "[s|d|i] [expr] [count?]"
 
-int CMD(examine, "reads a {string(s),digit(d),instruction(i)} from [expr]",
+
+int CMD(examine, USAGE " reads a string, digit or instruction from an address",
         s_proc *proc, int argc, char *argv[])
 {
     if (argc < 3)
-        CMD_FAIL("usage: {s,d,i} [expr]\n");
+    {
+        CMD_USAGE(USAGE, argv);
+        return CMD_FAILURE;
+    }
 
     t_ureg addr;
     if (proc_expr_eval(proc, argv[2], &addr))
