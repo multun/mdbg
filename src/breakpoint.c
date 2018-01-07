@@ -128,10 +128,3 @@ bool proc_breakpoint_step(s_proc *proc)
     MLIST_REMOVE(BPLIST, &proc->breakpoints, bp);
     return proc_breakpoint_disable(proc, bp);
 }
-
-
-int CMD(bp_step, "steps over a breakpoint",
-        s_proc *proc, int argc, char *argv[])
-{
-    return proc_breakpoint_step(proc) * CMD_FAILURE;
-}
