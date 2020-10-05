@@ -10,4 +10,5 @@ subdir('src')
 
 testexe = executable('mdbg', 'tracer.c',
                      include_directories: inc,
+                     install: true,
                      link_with: mdbglib)
